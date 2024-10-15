@@ -1,18 +1,14 @@
-import {
-  PipeTransform,
-  Injectable,
-  BadRequestException,
-  ArgumentMetadata,
-} from '@nestjs/common';
-import { RequestDto } from 'src/app.controller';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
-export class ValidationPipe implements PipeTransform<RequestDto, any> {
-  async transform(value: RequestDto, metadata: ArgumentMetadata) {
-    console.log('value', typeof value);
+export class ValidationPipe implements PipeTransform {
+  async transform(value: any, metadata: ArgumentMetadata) {
+    if (metadata.type === 'custom') {
+      return value;
+    }
     if (!value.name || value.name === '') {
-      // console.log('new value', value);
-      // throw new BadRequestException('Name cannot be empty'); // Validate request
+      throw new RpcException('Name cannot be empty');
     }
     return value;
   }

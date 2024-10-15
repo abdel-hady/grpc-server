@@ -19,8 +19,9 @@ export class AppController {
 
   // @UseGuards(AuthGuard)
   @GrpcMethod('HelloService', 'SayHi')
-  @UsePipes(new ValidationPipe())
+  @UsePipes(ValidationPipe)
   sayHi(data: RequestDto): { message: string } {
+    console.log('-----');
     return this.appService.sayHi(`${data.name}`);
   }
 }
